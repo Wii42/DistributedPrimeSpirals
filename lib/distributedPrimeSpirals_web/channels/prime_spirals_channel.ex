@@ -2,6 +2,7 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannel do
   use DistributedPrimeSpiralsWeb, :channel
 
   @impl true
+  @spec join(<<_::152>>, any(), any()) :: {:ok, any()}
   def join("prime_spirals:lobby", payload, socket) do
     if authorized?(payload) do
       {:ok, socket}
@@ -10,18 +11,14 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannel do
     end
   end
 
-  # Channels can be used in a request/response fashion
-  # by sending replies to requests from the client
   @impl true
-  def handle_in("ping", payload, socket) do
-    {:reply, {:ok, payload}, socket}
+  def join("prime_spirals:" <> _private_room_id, _params, _socket) do
+    {:error, %{reason: "unauthorized"}}
   end
 
-  # It is also common to receive messages from the client and
-  # broadcast to everyone in the current topic (prime_spirals:lobby).
   @impl true
-  def handle_in("shout", payload, socket) do
-    broadcast(socket, "shout", payload)
+  def handle_in("new_msg", %{"body" => body}, socket) do
+    broadcast!(socket, "new_msg", %{body: body})
     {:noreply, socket}
   end
 
