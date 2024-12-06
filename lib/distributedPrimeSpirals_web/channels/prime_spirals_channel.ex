@@ -1,10 +1,17 @@
 defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannel do
   use DistributedPrimeSpiralsWeb, :channel
+  require Logger
+
+  alias Phoenix.PubSub
+
+  @topic "prime_spirals"
 
   @impl true
   @spec join(<<_::152>>, any(), any()) :: {:ok, any()}
   def join("prime_spirals:lobby", payload, socket) do
     if authorized?(payload) do
+      PubSub.subscribe(DistributedPrimeSpirals.PubSub, @topic)
+      Logger.info("Client connected")
       {:ok, socket}
     else
       {:error, %{reason: "unauthorized"}}
@@ -25,5 +32,33 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannel do
   # Add authorization logic here as required.
   defp authorized?(_payload) do
     true
+  end
+
+  @impl true
+  def handle_in("find_primes", %{"n" => n}, socket) do
+    Logger.info("Client requests primes up to #{n}")
+
+    PrimeCalculator.find_primes(n, fn event, msg ->
+      PubSub.broadcast(DistributedPrimeSpirals.PubSub, @topic, {event, msg})
+    end)
+
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_info({:new_prime, num}, socket) do
+    # Logger.info("Prime found: #{num}")
+    push(socket, "new_prime", %{num: num})
+    {:noreply, socket}
+  end
+
+  def handle_info({:primes_done, _}, socket) do
+    Logger.info("Searching for primes done")
+    push(socket, "primes_done", %{})
+    {:noreply, socket}
+  end
+
+  def handle_info({:checked_ranges, _}, socket) do
+    {:noreply, socket}
   end
 end
