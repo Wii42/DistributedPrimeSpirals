@@ -1,4 +1,8 @@
 defmodule PrimeCalculator do
+  @moduledoc """
+  Provides methods to find all primes in  agiven range.
+  """
+
   @doc """
   Finds all primes from 0 to .
 
@@ -6,7 +10,7 @@ defmodule PrimeCalculator do
   Possible events are:
   - :primes_done - all primes up to n were found
   - :new_prime - a new prime number was found, message is the found prime. Example: (:new_prime, 7)
-  - :checked_ranges - how the range 0..n is divided up to allow concurrent computation
+  - :checked_ranges - how the range 0..n is divided up to allow concurrent computation, mesassage is the list of ranges. Example: (:checked_ranges, [0..2, 3..6])
   """
   @spec find_primes(number(), (atom(), any() -> :ok)) :: :ok
   def find_primes(n, notifier) do
@@ -17,10 +21,7 @@ defmodule PrimeCalculator do
       for node <- 0..(number_of_nodes - 1),
           do: generate_range(node, range_size, n)
 
-    notifier.(
-      :checked_ranges,
-      Enum.map(range_list, fn first..last//_ -> "#{first}..#{last}" end) |> Enum.join(", ")
-    )
+    notifier.(:checked_ranges, range_list)
 
     Task.async_stream(range_list, fn range ->
       check_chunk_for_primes(range, notifier)
@@ -28,15 +29,10 @@ defmodule PrimeCalculator do
     |> Enum.to_list()
 
     notifier.(:primes_done, "All primes up to #{n} found")
-    # PubSub.broadcast(PrimeSpirals.PubSub, @topic, :primes_done)
-    # IO.puts("All primes up to #{n} found")
   end
 
-  @doc """
-  Generates a range, ensuring that all generated ranges are disjunct and numbers are <= max_value
-
-  """
-  def generate_range(node, range_size, max_value) do
+  # Generates a range, ensuring that all generated ranges are disjunct and numbers are <= max_value
+  defp generate_range(node, range_size, max_value) do
     first = node * range_size
     last = (node + 1) * range_size - 1
 
@@ -55,22 +51,34 @@ defmodule PrimeCalculator do
 
     if p == true do
       notifier.(:new_prime, i)
-      # IO.inspect("new prime: #{i}")
-      # PubSub.broadcast(PrimeSpirals.PubSub, @topic, {:new_count, i})
     end
   end
 
-  defp is_prime?(num) when num <= 1, do: false
-  defp is_prime?(2), do: true
+  @spec is_prime?(integer()) :: boolean()
+  @doc "Returns wether an integer num is prime. Returns false for all negative integers."
+  def is_prime?(num) when num <= 1, do: false
+  def is_prime?(2), do: true
 
-  defp is_prime?(num) do
+  def is_prime?(num) do
     2..(:math.sqrt(num) |> ceil())
     |> Enum.all?(fn divisor -> rem(num, divisor) != 0 end)
   end
 
-  def handle_call(:get_value, _from, state) do
-    {:reply, state, state}
+  @spec notify_stdout(atom(), any()) :: :ok
+  @doc "Implementation for notifier which prints the event to the sandart output. Can be used in find_primes/2"
+  def notify_stdout(event, message) do
+    string_msg =
+      case event do
+        :checked_ranges ->
+          Enum.map(message, fn first..last//_ -> "#{first}..#{last}" end) |> Enum.join(", ")
+
+        _ ->
+          message
+      end
+
+    IO.puts("#{event}: #{string_msg}")
   end
 end
 
-PrimeCalculator.find_primes(1000, fn event, msg -> IO.puts("#{event}: #{msg}") end)
+#for testing via console
+PrimeCalculator.find_primes(1000, &PrimeCalculator.notify_stdout/2)
