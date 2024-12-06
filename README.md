@@ -1,5 +1,20 @@
 # DistributedPrimeSpirals
 
+
+## API
+
+Lobby: `prime_spirals:lobby`
+
+Client requests: 
+  - `find_primes(n)` // find all primes from 0 to and including n
+
+Server responses: 
+  - `new_prime`, payload 'num' // a new prime was found, the prime number is in the palyoad under the `num` key
+  - `primes_done` // all primes from 0 to n were found and already sent to the client
+
+
+#
+
 To start your Phoenix server:
 
   * Run `mix setup` to install and setup dependencies

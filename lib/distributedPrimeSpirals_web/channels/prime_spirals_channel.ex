@@ -34,7 +34,6 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannel do
     true
   end
 
-  @impl true
   def handle_in("find_primes", %{"n" => n}, socket) do
     Logger.info("Client requests primes up to #{n}")
 
@@ -58,7 +57,12 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannel do
     {:noreply, socket}
   end
 
-  def handle_info({:checked_ranges, _}, socket) do
+  def handle_info({:checked_ranges, ranges}, socket) do
+    Logger.info(
+      "Deivided range to be searched into #{length(ranges)} ranges to be computed concurrently"
+    )
+
+    # stub which does not send a message to the client at the moment
     {:noreply, socket}
   end
 end
