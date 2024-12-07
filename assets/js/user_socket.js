@@ -75,7 +75,7 @@ chatInput.addEventListener("keypress", event => {
   }
 })
 
-// Event listener for start button 
+// Event listener for start button (to call for new primes and start the whole process)
 startButton.addEventListener("click", event => {
   console.log("Start button was clicked.")
   channel.push("find_primes", { n: 100 });
@@ -95,12 +95,14 @@ channel.on("test_msg", payload => {
   messagesContainer.appendChild(messageItem)
 })
 
+// Activate channel to call for new prime generation 
 channel.on("new_prime", payload => {
   console.log("New prime message arrived.")
   let messageItem = document.createElement("p")
-  messageItem.innerText = `[${Date()}] ${payload.body}`
+  messageItem.innerText = `[${Date()}] ${payload.num}`
   messagesContainer.appendChild(messageItem)
 })
+
 
 
 export default socket
