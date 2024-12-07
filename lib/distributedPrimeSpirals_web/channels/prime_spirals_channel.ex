@@ -29,11 +29,17 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannel do
     {:noreply, socket}
   end
 
-  # Add authorization logic here as required.
-  defp authorized?(_payload) do
-    true
+  def handle_in("test_msg", %{"body" => body}, socket) do
+    broadcast!(socket, "test_msg", %{body: body})
+    {:noreply, socket}
   end
 
+  def handle_in("new_prime", %{"body" => body}, socket) do
+    broadcast!(socket, "new_prime", %{body: body})
+    {:noreply, socket}
+  end
+
+  # Handle-in if we want to calculate the prime numbers
   def handle_in("find_primes", %{"n" => n}, socket) do
     Logger.info("Client requests primes up to #{n}")
 
@@ -42,6 +48,11 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannel do
     end)
 
     {:noreply, socket}
+  end
+
+  # Add authorization logic here as required.
+  defp authorized?(_payload) do
+    true
   end
 
   @impl true
@@ -59,7 +70,7 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannel do
 
   def handle_info({:checked_ranges, ranges}, socket) do
     Logger.info(
-      "Deivided range to be searched into #{length(ranges)} ranges to be computed concurrently"
+      "Devided range to be searched into #{length(ranges)} ranges to be computed concurrently"
     )
 
     # stub which does not send a message to the client at the moment

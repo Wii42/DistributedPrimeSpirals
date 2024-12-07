@@ -62,20 +62,45 @@ channel.join()
   .receive("ok", resp => { console.log("Joined successfully", resp) })
   .receive("error", resp => { console.log("Unable to join", resp) })
 
+// Add Start button to start calculation
 let chatInput = document.querySelector("#chat-input")
+let startButton = document.querySelector("#start-calc")
 let messagesContainer = document.querySelector("#messages")
 
 chatInput.addEventListener("keypress", event => {
   if (event.key === 'Enter') {
-    channel.push("new_msg", { body: chatInput.value })
+    //channel.push("new_msg", { body: chatInput.value })
+    channel.push("test_msg", { body: chatInput.value })
     chatInput.value = ""
   }
 })
 
+// Event listener for start button 
+startButton.addEventListener("click", event => {
+  console.log("Start button was clicked.")
+  channel.push("find_primes", { n: 100 });
+})
+
 channel.on("new_msg", payload => {
+  console.log("New message arrived.")
   let messageItem = document.createElement("p")
   messageItem.innerText = `[${Date()}] ${payload.body}`
   messagesContainer.appendChild(messageItem)
 })
+
+channel.on("test_msg", payload => {
+  console.log("Test message arrived.")
+  let messageItem = document.createElement("p")
+  messageItem.innerText = `[${Date()}] ${payload.body}`
+  messagesContainer.appendChild(messageItem)
+})
+
+channel.on("new_prime", payload => {
+  console.log("New prime message arrived.")
+  let messageItem = document.createElement("p")
+  messageItem.innerText = `[${Date()}] ${payload.body}`
+  messagesContainer.appendChild(messageItem)
+})
+
 
 export default socket
