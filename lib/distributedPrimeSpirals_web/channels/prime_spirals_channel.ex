@@ -57,6 +57,8 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannel do
 
   # Handle-in for new found primes
   @impl true
+  @spec handle_info({:checked_ranges, any()} | {:new_prime, any()} | {:primes_done, any()}, any()) ::
+          {:noreply, any()}
   def handle_info({:new_prime, num}, socket) do
     Logger.info("Push message 'new_prime' with prime #{num} as payload.")
     # Send new found primes to the socket
