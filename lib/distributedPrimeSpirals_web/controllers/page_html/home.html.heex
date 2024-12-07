@@ -1,3 +1,35 @@
-<div id="messages" role="log" aria-live="polite"></div>
-<button type="button" id="start-calc">Start calculation!</button>
-<input id="chat-input" type="text">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display a lot of points forming spirals (with three.js)</title>
+    <style>
+      body {
+        margin: 0;
+      }
+
+      .info-box {
+        color: white;
+        font-family: Arial, sans-serif;
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 10px;
+        border-radius: 5px;
+    }
+    </style>
+  </head>
+  <body>
+    <script src="./js/app.js" type="module"></script>
+
+    <!-- Some divs to show information -->
+    <div id="prime-display" class="info-box" style="position: absolute; top: 10px; left: 10px;">Waiting for primes...</div>
+    <div id="info-div" class="info-box" style="position: absolute; top: 30px; left: 10px;" role="log" aria-live="polite">0</div>
+
+    <button type="button" id="start-calc">Start calculation!</button>
+    
+    <!--TODO: remove -->
+    <input id="chat-input" type="text">
+    
+    
+  </body>
+</html>

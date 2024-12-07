@@ -1,5 +1,18 @@
 # DistributedPrimeSpirals
 
+## Install and run it
+
+You will need three.js, install it with
+
+```
+npm install three.js
+```
+
+Eventually 
+```
+npm audit fix --force
+```
+
 ## API
 
 Endpoint: `prime_spirals:lobby`
@@ -12,17 +25,17 @@ Server responses:
   - `primes_done` // all primes from 0 to n were found and already sent to the client
 
 ## HOWTO Test prime number generation
-
+```
 elixir lib/distributedPrimeSpirals/prime_calculator.ex 
+```
 
 ## HOWTO start your Phoenix server:
 
   * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+  * Start Phoenix endpoint with `mix phx.server`
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+Now visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
 
 ## Learn more
 
