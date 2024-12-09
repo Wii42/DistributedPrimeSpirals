@@ -24,7 +24,7 @@ startButton.addEventListener("click", event => {
   console.log("Start button was clicked.")
 
   // ### Here is the infamous push of the message to go find the primes! ###
-  channel.push("find_primes", { n: 100 });
+  channel.push("find_primes", { n: 50000 });
 })
 
 // Channels for incoming messages
@@ -63,7 +63,6 @@ channel.on("new_prime", payload => {
   console.log(`Converted point [${r}]: x: ${x}, y: ${y}`);
 
   // And finally set the coordinates onto the grid
-  // TODO: refactor addPointToGrid function!
   addPointToGrid(x, y);
 })
 

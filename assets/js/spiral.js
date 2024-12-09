@@ -35,8 +35,10 @@ function initParticleSystem(containerId) {
     particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
     particleMaterial = new THREE.PointsMaterial({
-        color: 0xffffff,
-        size: 0.02,
+        color: 0xffcc00, // Warm yellow color for the particles
+        size: 0.1,      // Size of the particles
+        sizeAttenuation: true, // Ensures correct size attenuation with distance
+        vertexColors: false,   // Disables vertex coloring
     });
 
     particles = new THREE.Points(particleGeometry, particleMaterial);
