@@ -9,13 +9,15 @@
         margin: 0;
       }
 
-      .info-box {
-        color: white;
+    .info-box {
+        color: #FFD700;
         font-family: Arial, sans-serif;
-        background-color: rgba(0, 0, 0, 0.5);
-        padding: 10px;
-        border-radius: 5px;
-    }
+        background: linear-gradient(135deg, rgba(255, 165, 0, 0.7), rgba(255, 69, 0, 0.7));
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(255, 140, 0, 0.5);
+        text-shadow: 1px 1px 3px rgba(255, 165, 0, 0.8);
+    } 
     </style>
   </head>
   <body>
@@ -23,13 +25,13 @@
 
     <!-- Some divs to show information -->
     <div id="prime-display" class="info-box" style="position: absolute; top: 10px; left: 10px;">Waiting for primes...</div>
-    <div id="info-div" class="info-box" style="position: absolute; top: 30px; left: 10px;" role="log" aria-live="polite">0</div>
+    <div id="info-div" class="info-box" style="position: absolute; top: 70px; left: 10px;">0</div>
 
-    <button type="button" id="start-calc">Start calculation!</button>
-    
-    <!--TODO: remove -->
-    <input id="chat-input" type="text">
-    
+    <!-- Button to start calculation -->
+    <button type="button" id="start-calc" class="info-box" style="position: absolute; top: 140px; left: 10px;" onclick="this.hidden=true">Start calculation!</button>
+
+    <!-- the whole three.js magic -->
+    <div id="container"></div>
     
   </body>
 </html>

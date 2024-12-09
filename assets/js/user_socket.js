@@ -1,50 +1,34 @@
-// Bring in Phoenix channels client library:
+// Bring in Phoenix channels client library
 import { Socket } from "phoenix"
 
 // Import exported function 'addPointToGrid' which is needed to print prime numbers onto the three.js grid 
 import { addPointToGrid } from "./app.js"
 
-// And conneimport { addPointToGrid } from "./app.js"ct to the path in "lib/distributedPrimeSpirals_web/endpoint.ex". We pass the
-// token for authentication. Read below how it should be used.
+/* And conneimport { addPointToGrid } from "./app.js"ct to the path in "lib/distributedPrimeSpirals_web/endpoint.ex". 
+   We pass the token for authentication. Read below how it should be used. */
 let socket = new Socket("/socket", { params: { token: window.userToken } })
 
-// Connect to the socket:
+// Connect to the socket
 socket.connect()
 
-// After connection we open a channels with a topic ('lobby' is our 'endpoint')
+// After connection we open a channels with a topic ('prime_spirals:lobby' is our 'endpoint' so to speak)
 let channel = socket.channel("prime_spirals:lobby", {})
 channel.join()
   .receive("ok", resp => { console.log("Joined successfully", resp) })
   .receive("error", resp => { console.log("Unable to join", resp) })
 
 // Add Start button to start calculation
-let chatInput = document.querySelector("#chat-input")
 let startButton = document.querySelector("#start-calc")
-let messagesContainer = document.querySelector("#messages")
-
-chatInput.addEventListener("keypress", event => {
-  if (event.key === 'Enter') {
-    //channel.push("new_msg", { body: chatInput.value })
-    channel.push("test_msg", { body: chatInput.value })
-    chatInput.value = ""
-  }
-})
 
 // Event listener for start button (to call for new primes and start the whole process)
 startButton.addEventListener("click", event => {
   console.log("Start button was clicked.")
-  channel.push("find_primes", { n: 100 });
+
+  // ### Here is the infamous push of the message to go find the primes! ###
+  channel.push("find_primes", { n: 100000 });
 })
 
-// Add points dynamically using keypresses
-document.addEventListener('keydown', event => {
-  if (event.key === 'a') {
-      const x = Math.random() * 10 - 5;
-      const y = Math.random() * 10 - 5;
-      addPointToGrid(x, y);
-  }
-});
-
+// Channels for incoming messages
 channel.on("new_msg", payload => {
   console.log("New message arrived.")
   let messageItem = document.createElement("p")
@@ -63,30 +47,26 @@ channel.on("test_msg", payload => {
 channel.on("new_prime", payload => {
   console.log("New prime message arrived.")
   
-  // Print it on the top left side of index.html 
+  // Print it on the top left side of the page
   document.getElementById("prime-display").textContent = `New Prime: ${payload.num}`;
 
   // Define r (radius)
   let r = parseInt(payload.num);
-  console.log("#### " + r + " ######")
 
   // Define phi (Radians to degrees)
   let phi = r * (180 / Math.PI);
 
-  /* convert input to polar coordinates:
-      x = r cos φ
-      y = r sin φ) */
-  
+  // Convert input to polar coordinates: x = r cos φ, y = r sin φ
   let x = r * Math.cos(phi);
   let y = r * Math.sin(phi);
 
   // Output results
-  console.log(`x: ${x}, y: ${y}`);
+  console.log(`Converted point [${r}]: x: ${x}, y: ${y}`);
 
   // And finally set the coordinates onto the grid
-  addPointToGrid(x, y);
+  // TODO: refactor addPointToGrid function!
+  //addPointToGrid(x, y);
 })
-
 
 // Helper function to convert radians to degree
 function radians_to_degrees(radians)
@@ -96,6 +76,5 @@ function radians_to_degrees(radians)
   // Multiply radians by 180 divided by pi to convert to degrees.
   return radians * (180/pi);
 }
-
 
 export default socket

@@ -12,11 +12,6 @@ let liveSocket = new LiveSocket("/live", Socket, {
   params: {_csrf_token: csrfToken}
 })
 
-// Show progress bar on live navigation and form submits
-topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})
-window.addEventListener("phx:page-loading-start", _info => topbar.show(300))
-window.addEventListener("phx:page-loading-stop", _info => topbar.hide())
-
 // connect if there are any LiveViews on the page
 liveSocket.connect()
 
@@ -26,131 +21,117 @@ window.liveSocket = liveSocket
 
 
 
-// ### THREE.js ###
+// ### THREE.js ###this.addPoint
 import * as THREE from 'three';
+import { OrbitControls } from './OrbitControls.js';
 
-let scene, camera, renderer;
-let totalPoints = 0;
-const cameraZBase = 10;
-let points = []; // Store all points for visibility checks
+let container;
+let camera, scene, renderer, points, controls;
 
-// Cached geometries and materials
-let sphereGeometry, sphereMaterial, twinkleMaterial;
+init();
 
-// Initialize the scene
-function initializeScene() {
-    // Create scene, camera, and renderer
+function init() {
+    container = document.getElementById('container');
+
+    camera = new THREE.PerspectiveCamera(27, window.innerWidth / window.innerHeight, 5, 3500);
+    camera.position.z = 2750;
+
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-    renderer = new THREE.WebGLRenderer({ antialias: true });
+    scene.background = new THREE.Color(0x050505);
+    scene.fog = new THREE.Fog(0x050505, 2000, 3500);
 
-    // Configure renderer and add to DOM
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
+    const particles = 500000;
+    const geometry = new THREE.BufferGeometry();
 
-    // Add lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-    scene.add(ambientLight);
+    const arrayBuffer = new ArrayBuffer(particles * 16);
+    const interleavedFloat32Buffer = new Float32Array(arrayBuffer);
+    const interleavedUint8Buffer = new Uint8Array(arrayBuffer);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    directionalLight.position.set(5, 5, 10);
-    scene.add(directionalLight);
+    const color = new THREE.Color();
 
-    // Configure camera position
-    camera.position.set(0, 0, cameraZBase);
-    camera.lookAt(0, 0, 0);
+    const n = 1000, n2 = n / 2; // particles spread in the cube
 
-    // Precreate reusable geometry and materials
-    sphereGeometry = new THREE.SphereGeometry(1, 16, 16);
-    sphereMaterial = new THREE.MeshStandardMaterial({
-        color: 0x0077ff,
-        emissive: 0x000000,
-        roughness: 0.4,
-        metalness: 0.3,
-    });
+    const radius = 6; // spiral radius
+    const segments = particles; // to control the smoothness of the spiral
 
-    twinkleMaterial = new THREE.MeshBasicMaterial({
-        color: 0xffffff,
-        transparent: true,
-        opacity: 0.8,
-        blending: THREE.AdditiveBlending,
-    });
+    // Function to add a point
+    function addPoint(angle, height, index) {
+        const x = radius * Math.cos(angle);
+        const y = radius * Math.sin(angle);
+        const z = height;
 
-    // Start rendering loop
-    animate();
-}
+        interleavedFloat32Buffer[index * 4 + 0] = x;
+        interleavedFloat32Buffer[index * 4 + 1] = y;
+        interleavedFloat32Buffer[index * 4 + 2] = z;
 
-// Add a point to the scene
-function addPoint(x, y, z, size = 0.05) {
-    // Create sphere and set its position and size
-    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-    sphere.scale.setScalar(size);
-    sphere.position.set(x, y, z);
-    scene.add(sphere);
+        // color based on angle for gradient effect
+        const vx = (Math.cos(angle) + 1) / 2;
+        const vy = (Math.sin(angle) + 1) / 2;
+        const vz = (z / n) + 0.5;
 
-    // Track the total number of points
-    totalPoints++;
-    points.push(sphere); // Store the sphere for later visibility checks or manipulation
+        color.setRGB(vx, vy, vz);
 
-    // Add twinkle effect for visual flair
-    createTwinkleEffect(x, y, z, size);
+        const j = (index * 4 + 3) * 4;
 
-    // Update the on-screen point count
-    updateInfoDisplay();
-}
-
-// Create a reusable twinkle effect
-function createTwinkleEffect(x, y, z, size) {
-    const twinkle = new THREE.Mesh(sphereGeometry, twinkleMaterial);
-    twinkle.scale.setScalar(size * 1.5);
-    twinkle.position.set(x, y, z);
-    scene.add(twinkle);
-
-    const startTime = Date.now();
-    const twinkleDuration = 400;
-
-    function animateTwinkle() {
-        const elapsed = Date.now() - startTime;
-
-        if (elapsed < twinkleDuration) {
-            const progress = elapsed / twinkleDuration;
-
-            // Flash-up effect
-            if (progress < 0.5) {
-                twinkle.material.opacity = 0.8 + 0.4 * progress;
-                twinkle.scale.setScalar(size * (1 + 2 * progress));
-            } else {
-                twinkle.material.opacity = 1 - progress;
-                twinkle.scale.setScalar(size * (3 - 2 * progress));
-            }
-
-            requestAnimationFrame(animateTwinkle);
-        } else {
-            scene.remove(twinkle);
-        }
+        interleavedUint8Buffer[j + 0] = color.r * 255;
+        interleavedUint8Buffer[j + 1] = color.g * 255;
+        interleavedUint8Buffer[j + 2] = color.b * 255;
+        interleavedUint8Buffer[j + 3] = 255; // not needed
     }
 
-    animateTwinkle();
+    // Add points to the spiral
+    for (let i = 0; i < segments; i++) {
+        const angle = i * 0.01;
+        const height = i * 0.01;
+        addPoint(angle, height, i);
+    }
+
+    console.log("Added in total around points: " + segments)
+
+    const interleavedBuffer32 = new THREE.InterleavedBuffer(interleavedFloat32Buffer, 4);
+    const interleavedBuffer8 = new THREE.InterleavedBuffer(interleavedUint8Buffer, 16);
+
+    geometry.setAttribute('position', new THREE.InterleavedBufferAttribute(interleavedBuffer32, 3, 0, false));
+    geometry.setAttribute('color', new THREE.InterleavedBufferAttribute(interleavedBuffer8, 3, 12, true));
+
+    const material = new THREE.PointsMaterial({ size: 0.8, vertexColors: true, sizeAttenuation: false, pointSize: 1.5 });
+
+    points = new THREE.Points(geometry, material);
+    scene.add(points);
+
+    renderer = new THREE.WebGLRenderer();
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    // Attach the controls
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableZoom = true; // Enable zoom with mouse wheel
+
+    renderer.setAnimationLoop(animate);
+
+    container.appendChild(renderer.domElement);
+
+    window.addEventListener('resize', onWindowResize);
 }
 
-// Update the info display with the current point count
-function updateInfoDisplay() {
-    document.getElementById('info-div').innerHTML = `<p>Total Points: ${totalPoints}</p>`;
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-// Animation loop
 function animate() {
+    const time = 0.001;
+
+    points.rotation.x = time * 0.25;
+    points.rotation.y = time * 0.5;
+
+    controls.update(); // Update controls for camera movements
+
     renderer.render(scene, camera);
-    requestAnimationFrame(animate);
 }
 
-// Initialize the scene
-initializeScene();
-
-
-// Exported function to add incoming points from user_socket.js
-export function addPointToGrid(x, y) {
-  console.log("Received point:" + x + " and " + y);
-
-  addPoint(x, y, 0);
-}
+export function addPointToGrid() {
+    //foo
+};
