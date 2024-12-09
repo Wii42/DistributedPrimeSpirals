@@ -64,16 +64,14 @@ channel.on("new_prime", payload => {
 
   // And finally set the coordinates onto the grid
   // TODO: refactor addPointToGrid function!
-  //addPointToGrid(x, y);
+  addPointToGrid(x, y);
 })
 
 // Helper function to convert radians to degree
 function radians_to_degrees(radians)
 {
-  // Store the value of pi.
-  var pi = Math.PI;
   // Multiply radians by 180 divided by pi to convert to degrees.
-  return radians * (180/pi);
+  return radians * (180/Math.PI);
 }
 
 export default socket
