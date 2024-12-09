@@ -36,7 +36,7 @@ function initParticleSystem(containerId) {
 
     particleMaterial = new THREE.PointsMaterial({
         color: 0xffcc00, // Warm yellow color for the particles
-        size: 0.1,      // Size of the particles
+        size: 0.01,      // Size of the particles: 0.01 works nice with a particleMaterial.size of 0.2 
         sizeAttenuation: true, // Ensures correct size attenuation with distance
         vertexColors: false,   // Disables vertex coloring
     });
@@ -50,11 +50,32 @@ function initParticleSystem(containerId) {
     controls.enableRotate = false; // Disable rotation
     controls.enablePan = false; // Disable panning
 
+    function updateParticleSize(camera) {
+        // Calculate the distance of the camera from the center of the scene
+        const distance = camera.position.length();
+    
+        // Adjust the particle size based on the distance (e.g., using a logarithmic or linear scale)
+        const scaleFactor = Math.max(1, 1 + distance * 0.01); // You can tweak the 0.01 for more/less effect
+        particleMaterial.size = 0.2 * scaleFactor;
+    }
 
+    /*
     function updateZoomLevel() {
         const initialZ = 5; // The initial z-position of the camera
         const zoomLevel = Math.round((initialZ / camera.position.z) * 100) + '%'; // Reverse the scale logic
         document.getElementById('zoom').innerText = zoomLevel;
+    }*/
+
+    function updateZoomLevel() {
+        const initialZ = 5; // The initial z-position of the camera
+        const currentZ = camera.position.z; // Current z-position of the camera
+        const zoomFactor = initialZ / currentZ; // Calculate zoom factor based on the current distance from the initial position
+        const zoomLevel = Math.round(zoomFactor * 100) + '%'; // Convert the zoom factor into a percentage
+        document.getElementById('zoom').innerText = zoomLevel;
+    
+        // Adjust particle size based on zoom factor to ensure visibility
+        const scaleFactor = Math.max(1, zoomFactor); // Ensure particles remain visible as zooming out
+        particleMaterial.size = 0.02 * scaleFactor;
     }
 
     // Update zoom level on control change
@@ -72,6 +93,9 @@ function initParticleSystem(containerId) {
     function animate() {
         requestAnimationFrame(animate);
         controls.update(); // Update controls for camera movements
+
+        // Update particle size based on the camera's distance
+        updateParticleSize(camera);
 
         // Update stats
         stats.update(); // Update the stats instance

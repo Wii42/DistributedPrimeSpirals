@@ -24,7 +24,7 @@ startButton.addEventListener("click", event => {
   console.log("Start button was clicked.")
 
   // ### Here is the infamous push of the message to go find the primes! ###
-  channel.push("find_primes", { n: 50000 });
+  channel.push("find_primes", { n: 1000000 });
 })
 
 // Channels for incoming messages
@@ -56,8 +56,8 @@ channel.on("new_prime", payload => {
   let phi = r * (180 / Math.PI);
 
   // Convert input to polar coordinates: x = r cos φ, y = r sin φ
-  let x = r * Math.cos(phi)*0.01;
-  let y = r * Math.sin(phi)*0.01;
+  let x = r * Math.cos(phi)*0.001;     // Important variables to play around with the visual effect of displaying a LOT of particles (= makes more narrow spirals)
+  let y = r * Math.sin(phi)*0.001;
 
   // Output results
   console.log(`Converted point [${r}]: x: ${x}, y: ${y}`);
