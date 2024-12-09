@@ -1,11 +1,10 @@
 // Bring in Phoenix channels client library
 import { Socket } from "phoenix"
 
-// Import exported function 'addPointToGrid' which is needed to print prime numbers onto the three.js grid 
-import { addPointToGrid } from "./app.js"
+// Import exported function 'addPoint' which is needed to print prime numbers onto the three.js grid 
+import { addPointToGrid } from "./spiral.js"
 
-/* And conneimport { addPointToGrid } from "./app.js"ct to the path in "lib/distributedPrimeSpirals_web/endpoint.ex". 
-   We pass the token for authentication. Read below how it should be used. */
+// We pass the token for authentication. Read below how it should be used.
 let socket = new Socket("/socket", { params: { token: window.userToken } })
 
 // Connect to the socket
@@ -25,7 +24,7 @@ startButton.addEventListener("click", event => {
   console.log("Start button was clicked.")
 
   // ### Here is the infamous push of the message to go find the primes! ###
-  channel.push("find_primes", { n: 100000 });
+  channel.push("find_primes", { n: 100 });
 })
 
 // Channels for incoming messages
@@ -65,7 +64,7 @@ channel.on("new_prime", payload => {
 
   // And finally set the coordinates onto the grid
   // TODO: refactor addPointToGrid function!
-  //addPointToGrid(x, y);
+  addPointToGrid(x, y);
 })
 
 // Helper function to convert radians to degree

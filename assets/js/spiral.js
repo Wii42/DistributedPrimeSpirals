@@ -1,0 +1,115 @@
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import Stats from 'three/examples/jsm/libs/stats.module.js'; // Import the Stats library
+
+let scene, camera, renderer, particles, particleMaterial, particleGeometry, stats;
+let pointsAdded = 0;
+let controls;
+
+// Initialize the particle system
+function initParticleSystem(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) {
+        console.error(`Container with id "${containerId}" not found.`);
+        return;
+    }
+
+    // Scene setup
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x000000); // Black background
+
+    // Camera setup
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 5;
+
+    // Renderer setup
+    renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    container.appendChild(renderer.domElement);
+
+    // Particle system setup
+    particleGeometry = new THREE.BufferGeometry();
+    const maxParticles = 500000;
+
+    const positions = new Float32Array(maxParticles * 3); // x, y, z for each particle
+    particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+    particleMaterial = new THREE.PointsMaterial({
+        color: 0xffffff,
+        size: 0.02,
+    });
+
+    particles = new THREE.Points(particleGeometry, particleMaterial);
+    scene.add(particles);
+
+    // OrbitControls for smooth zooming
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableZoom = true; // Enable zoom with mouse wheel
+    controls.enableRotate = false; // Disable rotation
+    controls.enablePan = false; // Disable panning
+
+
+    function updateZoomLevel() {
+        const initialZ = 5; // The initial z-position of the camera
+        const zoomLevel = Math.round((initialZ / camera.position.z) * 100) + '%'; // Reverse the scale logic
+        document.getElementById('zoom').innerText = zoomLevel;
+    }
+
+    // Update zoom level on control change
+    controls.addEventListener('change', updateZoomLevel);
+    updateZoomLevel(); // Initialize display
+
+    // Stats for FPS display
+    const statsContainer = document.getElementById('stats'); // Use specific div for stats
+    stats = new Stats();
+    stats.showPanel(0); // 0: fps, 1: ms, 2: memory
+    stats.dom.style.position = 'absolute';
+    statsContainer.appendChild(stats.dom); // Append stats to the designated div
+
+    // Render loop
+    function animate() {
+        requestAnimationFrame(animate);
+        controls.update(); // Update controls for camera movements
+
+        // Update stats
+        stats.update(); // Update the stats instance
+
+        renderer.render(scene, camera);
+    }
+    animate();
+}
+
+// Add a single particle to the system
+function addPoint(x, y) {
+    if (!particleGeometry) {
+        console.error("Particle system not initialized. Call initParticleSystem() first.");
+        return;
+    }
+
+    if (pointsAdded >= particleGeometry.attributes.position.array.length / 3) {
+        console.warn("Maximum number of particles reached.");
+        return;
+    }
+
+    const positions = particleGeometry.attributes.position.array;
+    const index = pointsAdded * 3;
+
+    positions[index] = x;
+    positions[index + 1] = y;
+    positions[index + 2] = 0; // z-coordinate is 0 for 2D plane
+
+    pointsAdded++;
+
+    particleGeometry.attributes.position.needsUpdate = true; // Notify THREE.js to update geometry
+
+    // Update the number of points displayed
+    document.getElementById('number-of-primes').innerText = `Primes: ${pointsAdded}`;
+}
+
+// Initialize particle system (for example use)
+initParticleSystem('container');
+
+// Add some points
+addPoint(1, 1);
+addPoint(2, 2);
+

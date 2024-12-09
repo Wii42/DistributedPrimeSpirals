@@ -2,9 +2,11 @@
 
 ## Install and run it
 
-You will need three.js, install it with
+You will need phoenix_html and three.js, install it with
 
 ```
+npm install phoenix_html
+
 npm install three.js
 ```
 
