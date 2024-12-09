@@ -18,13 +18,3 @@ liveSocket.connect()
 // expose liveSocket on window for web console debug logs and latency simulation:
 // >> liveSocket.enableDebug()
 window.liveSocket = liveSocket
-
-
-// Initialize the particle system (spirals.js)
-import { initParticleSystem } from './spiral.js';
-
-initParticleSystem('container');
-
-export function addPointToGrid() {
-    //foo
-};

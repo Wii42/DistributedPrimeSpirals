@@ -64,7 +64,7 @@ channel.on("new_prime", payload => {
 
   // And finally set the coordinates onto the grid
   // TODO: refactor addPointToGrid function!
-  addPointToGrid(x, y);
+  //addPointToGrid(x, y);
 })
 
 // Helper function to convert radians to degree
