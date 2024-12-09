@@ -59,23 +59,10 @@ function initParticleSystem(containerId) {
         particleMaterial.size = 0.2 * scaleFactor;
     }
 
-    /*
     function updateZoomLevel() {
         const initialZ = 5; // The initial z-position of the camera
         const zoomLevel = Math.round((initialZ / camera.position.z) * 100) + '%'; // Reverse the scale logic
         document.getElementById('zoom').innerText = zoomLevel;
-    }*/
-
-    function updateZoomLevel() {
-        const initialZ = 5; // The initial z-position of the camera
-        const currentZ = camera.position.z; // Current z-position of the camera
-        const zoomFactor = initialZ / currentZ; // Calculate zoom factor based on the current distance from the initial position
-        const zoomLevel = Math.round(zoomFactor * 100) + '%'; // Convert the zoom factor into a percentage
-        document.getElementById('zoom').innerText = zoomLevel;
-    
-        // Adjust particle size based on zoom factor to ensure visibility
-        const scaleFactor = Math.max(1, zoomFactor); // Ensure particles remain visible as zooming out
-        particleMaterial.size = 0.02 * scaleFactor;
     }
 
     // Update zoom level on control change
