@@ -56,8 +56,8 @@ channel.on("new_prime", payload => {
   let phi = r * (180 / Math.PI);
 
   // Convert input to polar coordinates: x = r cos φ, y = r sin φ
-  let x = r * Math.cos(phi);
-  let y = r * Math.sin(phi);
+  let x = r * Math.cos(phi)*0.01;
+  let y = r * Math.sin(phi)*0.01;
 
   // Output results
   console.log(`Converted point [${r}]: x: ${x}, y: ${y}`);

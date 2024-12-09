@@ -114,7 +114,3 @@ export function addPointToGrid(x, y) {
     addPoint(x, y);
 };
 
-// Add some points
-addPoint(1, 1);
-addPoint(2, 2);
-
