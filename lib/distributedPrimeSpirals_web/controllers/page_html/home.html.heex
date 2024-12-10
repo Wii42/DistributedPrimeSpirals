@@ -1,2 +1,42 @@
-<div id="messages" role="log" aria-live="polite"></div>
-<input id="chat-input" type="text">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display a lot of points forming spirals (with three.js)</title>
+    <style>
+      body {
+        margin: 0;
+      }
+
+    .info-box {
+        color: #FFD700;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, rgba(255, 165, 0, 0.7), rgba(255, 69, 0, 0.7));
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(255, 140, 0, 0.5);
+        text-shadow: 1px 1px 3px rgba(255, 165, 0, 0.8);
+    } 
+    </style>
+  </head>
+  <body>
+    <script src="./js/app.js" type="module"></script>
+
+    <!-- Some divs to show information -->
+    <div id="prime-display" class="info-box" style="position: absolute; top: 10px; left: 10px; min-width: 90px;">Waiting for primes...</div>
+    <div id="number-of-primes" class="info-box" style="position: absolute; top: 70px; left: 10px; min-width: 90px;">0</div>
+
+    <!-- Button to start calculation -->
+    <button type="button" id="start-calc" class="info-box" style="position: absolute; top: 140px; left: 10px;" onclick="this.hidden=true">Start calculation!</button>
+
+    <!-- the whole three.js magic -->
+    <div id="container"></div>
+    
+    <!-- Zoom-->
+    <div id="zoom" style="position: absolute; top: 5px; right: 5px; color: white">___</div>
+
+    <!-- Stats -->
+    <div id="stats" style="position: absolute; bottom: 65px; left: 15px;"></div>
+  </body>
+</html>

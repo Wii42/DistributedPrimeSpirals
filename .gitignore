@@ -9,3 +9,8 @@ erl_crash.dump
 /config/*.secret.exs
 .elixir_ls/
 /priv/static/assets/
+/node_modules/
+.tool-versions
+package-lock.json
+package.json
+/priv/*
