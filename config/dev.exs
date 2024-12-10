@@ -6,10 +6,13 @@ import Config
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we can use it
 # to bundle .js and .css sources.
+port = String.to_integer(System.get_env("PORT", nil))
+
+
 config :distributedPrimeSpirals, DistributedPrimeSpiralsWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
-  http: [ip: {127, 0, 0, 1}, port: 4000],
+  http: [ip: {127, 0, 0, 1}, port: port],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
@@ -70,3 +73,15 @@ config :phoenix_live_view,
   debug_heex_annotations: true,
   # Enable helpful, but potentially expensive runtime checks
   enable_expensive_runtime_checks: true
+
+
+  config :libcluster,
+  topologies: [
+      example: [
+          strategy: Cluster.Strategy.Epmd,
+          config: [hosts: [:"a@127.0.0.1", :"b@127.0.0.1"]],
+          connect: {:net_kernel, :connect_node, []},
+          disconnect: {:erlang, :disconnect_node, []},
+          list_nodes: {:erlang, :nodes, [:connected]},
+      ]
+  ]

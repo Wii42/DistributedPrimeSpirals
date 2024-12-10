@@ -7,14 +7,18 @@ defmodule DistributedPrimeSpirals.Application do
 
   @impl true
   def start(_type, _args) do
+    topologies = Application.get_env(:libcluster, :topologies) || []
+
     children = [
       DistributedPrimeSpiralsWeb.Telemetry,
-      {DNSCluster, query: Application.get_env(:distributedPrimeSpirals, :dns_cluster_query) || :ignore},
+      {DNSCluster,
+       query: Application.get_env(:distributedPrimeSpirals, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: DistributedPrimeSpirals.PubSub},
       # Start a worker by calling: DistributedPrimeSpirals.Worker.start_link(arg)
       # {DistributedPrimeSpirals.Worker, arg},
       # Start to serve requests, typically the last entry
-      DistributedPrimeSpiralsWeb.Endpoint
+      DistributedPrimeSpiralsWeb.Endpoint,
+      {Cluster.Supervisor, [topologies, [name: DistributedPrimeSpirals.ClusterSupervisor]]}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
