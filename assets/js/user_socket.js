@@ -27,14 +27,6 @@ startButton.addEventListener("click", event => {
   channel.push("find_primes", { n: 1000000 });
 })
 
-// Channels for incoming messages
-channel.on("new_msg", payload => {
-  console.log("New message arrived.")
-  let messageItem = document.createElement("p")
-  messageItem.innerText = `[${Date()}] ${payload.body}`
-  messagesContainer.appendChild(messageItem)
-})
-
 // Activate channel to call for new prime generation 
 channel.on("new_prime", payload => {
   console.log("New prime message arrived.")
