@@ -19,6 +19,16 @@ Furthermore you need **Mix**, a "build tool that provides tasks for creating, co
 
 The project already contains **OrbitControls**, as it is already imported explicitly in our project structure: https://threejs.org/docs/#examples/en/controls/OrbitControls
 
+
+## Alternative: Run it in Docker
+
+In the project root, run:
+``` 
+docker build -t prime-spirals .
+docker run -p 4000:4000 prime-spirals
+```
+
+
 ## API
 
 Endpoint: `prime_spirals:endpoint`
