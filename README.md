@@ -6,9 +6,7 @@ You will need phoenix_html, three and three.js, install it with
 
 ```
 npm install phoenix_html
-
 npm install three
-
 npm install three.js
 ```
 
@@ -16,6 +14,16 @@ Eventually
 ```
 npm audit fix --force
 ```
+
+
+## Alternative: Run it in Docker
+
+In the project root, run:
+``` 
+docker build -t prime-spirals .
+docker run -p 4000:4000 prime-spirals
+```
+
 
 ## API
 
