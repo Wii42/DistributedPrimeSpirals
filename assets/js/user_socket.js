@@ -35,13 +35,6 @@ channel.on("new_msg", payload => {
   messagesContainer.appendChild(messageItem)
 })
 
-channel.on("test_msg", payload => {
-  console.log("Test message arrived.")
-  let messageItem = document.createElement("p")
-  messageItem.innerText = `[${Date()}] ${payload.body}`
-  messagesContainer.appendChild(messageItem)
-})
-
 // Activate channel to call for new prime generation 
 channel.on("new_prime", payload => {
   console.log("New prime message arrived.")
