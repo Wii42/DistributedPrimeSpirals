@@ -23,12 +23,6 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannel do
     {:error, %{reason: "unauthorized"}}
   end
 
-  @impl true
-  def handle_in("new_msg", %{"body" => body}, socket) do
-    broadcast!(socket, "new_msg", %{body: body})
-    {:noreply, socket}
-  end
-
   def handle_in("new_prime", %{"body" => body}, socket) do
     broadcast!(socket, "new_prime", %{body: body})
     {:noreply, socket}
