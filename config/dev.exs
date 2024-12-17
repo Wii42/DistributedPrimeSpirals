@@ -19,6 +19,8 @@ config :distributedPrimeSpirals, DistributedPrimeSpiralsWeb.Endpoint,
       {Esbuild, :install_and_run, [:distributedPrimeSpirals, ~w(--sourcemap=inline --watch)]}
   ]
 
+
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed
@@ -70,3 +72,16 @@ config :phoenix_live_view,
   debug_heex_annotations: true,
   # Enable helpful, but potentially expensive runtime checks
   enable_expensive_runtime_checks: true
+
+
+  config :libcluster,
+  topologies: [
+    gossip_example: [
+      strategy: Elixir.Cluster.Strategy.Gossip,
+      config: [
+        port: 45892,
+        if_addr: "0.0.0.0",
+        #multicast_if: "192.168.1.1",
+        multicast_addr: "233.252.1.32",
+        multicast_ttl: 1]]],
+  debug: true

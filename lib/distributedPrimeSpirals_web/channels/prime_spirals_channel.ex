@@ -12,6 +12,7 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannel do
     if authorized?(payload) do
       PubSub.subscribe(DistributedPrimeSpirals.PubSub, @topic)
       Logger.info("Client connected")
+      debug_info()
       {:ok, socket}
     else
       {:error, %{reason: "unauthorized"}}
@@ -41,6 +42,8 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannel do
 
   # Handle-in if we want to calculate the prime numbers (Button on main view)
   def handle_in("find_primes", %{"n" => n}, socket) do
+    debug_info()
+    Logger.info("Client requests primes up to #{n}")
     Logger.info("Client requests primes up to #{n}")
 
     PrimeCalculator.find_primes(n, fn event, msg ->
@@ -75,5 +78,14 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannel do
   def handle_info({:checked_ranges, ranges}, socket) do
     Logger.info("Devided range to be searched into #{length(ranges)} ranges to be computed concurrently")
     {:noreply, socket}
+  end
+
+  defp debug_info() do
+    Logger.debug("This node:")
+    Logger.debug(Node.self() |> inspect())
+    Logger.debug("Connected nodes:")
+    Logger.debug(Node.list() |> inspect())
+    Logger.debug("This cookie:")
+    Logger.debug(Node.get_cookie() |> inspect())
   end
 end
