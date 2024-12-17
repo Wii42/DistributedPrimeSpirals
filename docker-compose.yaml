@@ -1,20 +1,18 @@
 version: '3.8'
 services:
-  prime-spirals:
+  main:
     image: prime-spirals
-    #build:
-    #  context: .
-    #  dockerfile: Dockerfile
     ports:
-      - "4000"
-      #- "45892"
+      - "4000:4000"
     networks:
       - app_network
-    environment:
-      - RELEASE_COOKIE=somepassword
-    # environment:
-    #  - ENV_VAR=value
-
+  additional-node:
+    image: prime-spirals
+    ports:
+      - "4000"
+    networks:
+      - app_network
+    
 networks:
   app_network:
     driver: bridge

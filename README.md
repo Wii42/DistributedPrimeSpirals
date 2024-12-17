@@ -21,6 +21,19 @@ npm audit fix --force
 In the project root, run:
 ``` 
 docker build -t prime-spirals .
+docker-compose up
+```
+This creates a cluster of 2 nodes.
+
+To select the number of nodes you can run:
+```
+docker-compose up --scale additional-node=<n>
+``` 
+`n` is the number of nodes you want to run additionaly to the main node. In total there will be running n+1 nodes.
+
+
+To run a single instance, you can also run:
+``` 
 docker run -p 4000:4000 prime-spirals
 ```
 
