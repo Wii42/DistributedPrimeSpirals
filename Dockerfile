@@ -33,4 +33,4 @@ RUN mix do compile
 # Expose Phoenix server port (default is 4000)
 EXPOSE 4000
 
-ENTRYPOINT ["elixir", "--sname", "test", "-S", "mix", "phx.server"]
+ENTRYPOINT ["elixir", "--sname", "prime-spirals", "-S", "mix", "phx.server"]
