@@ -5,7 +5,7 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannelTest do
     {:ok, _, socket} =
       DistributedPrimeSpiralsWeb.UserSocket
       |> socket("user_id", %{some: :assign})
-      |> subscribe_and_join(DistributedPrimeSpiralsWeb.PrimeSpiralsChannel, "prime_spirals:lobby")
+      |> subscribe_and_join(DistributedPrimeSpiralsWeb.PrimeSpiralsChannel, "prime_spirals:endpoint")
 
     %{socket: socket}
   end
@@ -15,7 +15,7 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannelTest do
     assert_reply ref, :ok, %{"hello" => "there"}
   end
 
-  test "shout broadcasts to prime_spirals:lobby", %{socket: socket} do
+  test "shout broadcasts to prime_spirals:endpoint", %{socket: socket} do
     push(socket, "shout", %{"hello" => "all"})
     assert_broadcast "shout", %{"hello" => "all"}
   end
