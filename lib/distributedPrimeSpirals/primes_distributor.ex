@@ -15,8 +15,6 @@ defmodule DistributedPrimeSpirals.PrimesDistributor do
     number_of_nodes = length(nodes)
     range_list = PrimeCalculator.divide_into_ranges(n, number_of_nodes)
 
-    # notifier.(:checked_ranges, range_list)
-
     node_ranges = Enum.zip(nodes, range_list)
     node_ranges |> inspect() |> Logger.debug()
 
@@ -30,13 +28,6 @@ defmodule DistributedPrimeSpirals.PrimesDistributor do
             @topic,
             {:find_primes_in_range, range, notifier}
           )
-
-    # Task.async_stream(range_list, fn range ->
-    #  PrimeCalculator.find_primes_in_range(range, notifier)
-    # end)
-    # |> Enum.to_list()
-
-    # notifier.(:primes_done, "All primes up to #{n} found")
   end
 
   defp nodes() do

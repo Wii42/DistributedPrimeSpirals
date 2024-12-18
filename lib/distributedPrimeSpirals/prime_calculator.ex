@@ -27,6 +27,7 @@ defmodule PrimeCalculator do
     notifier.(:primes_done, "All primes up to #{n} found")
   end
 
+  @spec divide_into_ranges(number(), integer()) :: list()
   def divide_into_ranges(n, number_of_ranges) do
     range_size = ((n + 1) / number_of_ranges) |> ceil()
 

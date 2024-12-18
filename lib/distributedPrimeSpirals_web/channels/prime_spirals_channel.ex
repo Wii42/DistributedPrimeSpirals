@@ -4,39 +4,17 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannel do
 
   alias Phoenix.PubSub
 
-  @topic "prime_spirals"
+  @topic "prime_spirals_channel"
 
   @impl true
   @spec join(<<_::152>>, any(), any()) :: {:ok, any()}
   def join("prime_spirals:lobby", payload, socket) do
-    if authorized?(payload) do
-      PubSub.subscribe(DistributedPrimeSpirals.PubSub, @topic)
-      Logger.info("Client connected")
-      Logger.debug("PubSub node:")
-      PubSub.node_name(DistributedPrimeSpirals.PubSub) |> inspect() |> Logger.debug()
-      debug_info()
-      {:ok, socket}
-    else
-      {:error, %{reason: "unauthorized"}}
-    end
+    PubSub.subscribe(DistributedPrimeSpirals.PubSub, @topic)
+    Logger.info("Client connected")
+    {:ok, socket}
   end
 
   @impl true
-  def join("prime_spirals:" <> _private_room_id, _params, _socket) do
-    {:error, %{reason: "unauthorized"}}
-  end
-
-  @impl true
-  def handle_in("new_msg", %{"body" => body}, socket) do
-    broadcast!(socket, "new_msg", %{body: body})
-    {:noreply, socket}
-  end
-
-  def handle_in("test_msg", %{"body" => body}, socket) do
-    broadcast!(socket, "test_msg", %{body: body})
-    {:noreply, socket}
-  end
-
   def handle_in("new_prime", %{"body" => body}, socket) do
     broadcast!(socket, "new_prime", %{body: body})
     {:noreply, socket}
@@ -44,26 +22,19 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannel do
 
   # Handle-in if we want to calculate the prime numbers (Button on main view)
   def handle_in("find_primes", %{"n" => n}, socket) do
-    debug_info()
     Logger.info("Client requests primes up to #{n}")
 
     DistributedPrimeSpirals.PrimesDistributor.distribute_primes_calculation(
       n,
-      fn event, msg ->
-        PubSub.broadcast(DistributedPrimeSpirals.PubSub, @topic, {event, msg})
-      end
+      &on_primes_calculation_event/2
     )
-
-    #PrimeCalculator.find_primes(n, fn event, msg ->
-    #  PubSub.broadcast(DistributedPrimeSpirals.PubSub, @topic, {event, msg})
-    #end)
 
     {:noreply, socket}
   end
 
-  # Add authorization logic here as required.
-  defp authorized?(_payload) do
-    true
+  # specifies what should be done when PrimeCalculator has an event like a new prime found.
+  defp on_primes_calculation_event(event, message) do
+    PubSub.broadcast(DistributedPrimeSpirals.PubSub, @topic, {event, message})
   end
 
   # Handle-in for new found primes
@@ -89,14 +60,5 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannel do
     )
 
     {:noreply, socket}
-  end
-
-  defp debug_info() do
-    Logger.debug("This node:")
-    Logger.debug(Node.self() |> inspect())
-    Logger.debug("Connected nodes:")
-    Logger.debug(Node.list() |> inspect())
-    Logger.debug("This cookie:")
-    Logger.debug(Node.get_cookie() |> inspect())
   end
 end
