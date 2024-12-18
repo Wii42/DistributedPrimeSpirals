@@ -83,5 +83,4 @@ config :phoenix_live_view,
         if_addr: "0.0.0.0",
         #multicast_if: "192.168.1.1",
         multicast_addr: "233.252.1.32",
-        multicast_ttl: 1]]],
-  debug: true
+        multicast_ttl: 1]]]

@@ -21,6 +21,7 @@ defmodule DistributedPrimeSpirals.Application do
       {Cluster.Supervisor, [topologies, [name: DistributedPrimeSpirals.ClusterSupervisor]]},
       # Start a worker by calling: DistributedPrimeSpirals.Worker.start_link(arg)
       # {DistributedPrimeSpirals.Worker, arg},
+      DistributedPrimeSpirals.PrimesDistributor,
       # Start to serve requests, typically the last entry
       DistributedPrimeSpiralsWeb.Endpoint
     ]

@@ -12,6 +12,8 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannel do
     if authorized?(payload) do
       PubSub.subscribe(DistributedPrimeSpirals.PubSub, @topic)
       Logger.info("Client connected")
+      Logger.debug("PubSub node:")
+      PubSub.node_name(DistributedPrimeSpirals.PubSub) |> inspect() |> Logger.debug()
       debug_info()
       {:ok, socket}
     else
@@ -44,11 +46,17 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannel do
   def handle_in("find_primes", %{"n" => n}, socket) do
     debug_info()
     Logger.info("Client requests primes up to #{n}")
-    Logger.info("Client requests primes up to #{n}")
 
-    PrimeCalculator.find_primes(n, fn event, msg ->
-      PubSub.broadcast(DistributedPrimeSpirals.PubSub, @topic, {event, msg})
-    end)
+    DistributedPrimeSpirals.PrimesDistributor.distribute_primes_calculation(
+      n,
+      fn event, msg ->
+        PubSub.broadcast(DistributedPrimeSpirals.PubSub, @topic, {event, msg})
+      end
+    )
+
+    #PrimeCalculator.find_primes(n, fn event, msg ->
+    #  PubSub.broadcast(DistributedPrimeSpirals.PubSub, @topic, {event, msg})
+    #end)
 
     {:noreply, socket}
   end
@@ -76,7 +84,10 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannel do
   end
 
   def handle_info({:checked_ranges, ranges}, socket) do
-    Logger.info("Devided range to be searched into #{length(ranges)} ranges to be computed concurrently")
+    Logger.info(
+      "Devided range to be searched into #{length(ranges)} ranges to be computed concurrently"
+    )
+
     {:noreply, socket}
   end
 

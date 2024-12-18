@@ -15,20 +15,23 @@ defmodule PrimeCalculator do
   @spec find_primes(number(), (atom(), any() -> :ok)) :: :ok
   def find_primes(n, notifier) do
     number_of_nodes = 16
-    range_size = ((n + 1) / number_of_nodes) |> ceil()
-
-    range_list =
-      for node <- 0..(number_of_nodes - 1),
-          do: generate_range(node, range_size, n)
+    range_list = divide_into_ranges(n, number_of_nodes)
 
     notifier.(:checked_ranges, range_list)
 
     Task.async_stream(range_list, fn range ->
-      check_chunk_for_primes(range, notifier)
+      find_primes_in_range(range, notifier)
     end)
     |> Enum.to_list()
 
     notifier.(:primes_done, "All primes up to #{n} found")
+  end
+
+  def divide_into_ranges(n, number_of_ranges) do
+    range_size = ((n + 1) / number_of_ranges) |> ceil()
+
+    for node <- 0..(number_of_ranges - 1),
+        do: generate_range(node, range_size, n)
   end
 
   # Generates a range, ensuring that all generated ranges are disjunct and numbers are <= max_value
@@ -41,7 +44,7 @@ defmodule PrimeCalculator do
     if first <= max_value, do: Range.new(first, min(last, max_value)), else: 1..0//1
   end
 
-  defp check_chunk_for_primes(range, notifier) do
+  def find_primes_in_range(range, notifier) do
     for i <- range, do: check_number(i, notifier)
     range
   end
@@ -80,5 +83,5 @@ defmodule PrimeCalculator do
   end
 end
 
-#for testing via console
+# for testing via console
 PrimeCalculator.find_primes(1000, &PrimeCalculator.notify_stdout/2)
