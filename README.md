@@ -17,6 +17,10 @@ Eventually
 npm audit fix --force
 ```
 
+Furthermore you need **Mix**, a "build tool that provides tasks for creating, compiling, and testing Elixir projects, managing its dependencies, and more.": https://hexdocs.pm/mix/1.12.3/Mix.html
+
+The project already contains **OrbitControls**, as it is already imported explicitly in our project structure: https://threejs.org/docs/#examples/en/controls/OrbitControls
+
 ## API
 
 Endpoint: `prime_spirals:lobby`
