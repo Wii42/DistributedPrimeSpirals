@@ -21,7 +21,7 @@ The project already contains **OrbitControls**, as it is already imported explic
 
 ## API
 
-Endpoint: `prime_spirals:lobby`
+Endpoint: `prime_spirals:endpoint`
 
 Client requests: 
   - `find_primes(n)` // find all primes from 0 to and including n
