@@ -10,8 +10,8 @@ let socket = new Socket("/socket", { params: { token: window.userToken } })
 // Connect to the socket
 socket.connect()
 
-// After connection we open a channels with a topic ('prime_spirals:lobby' is our 'endpoint' so to speak)
-let channel = socket.channel("prime_spirals:lobby", {})
+// After connection we open a channels with a topic
+let channel = socket.channel("prime_spirals:endpoint", {})
 channel.join()
   .receive("ok", resp => { console.log("Joined successfully", resp) })
   .receive("error", resp => { console.log("Unable to join", resp) })

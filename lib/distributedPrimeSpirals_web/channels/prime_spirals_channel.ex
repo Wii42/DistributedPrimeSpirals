@@ -8,7 +8,7 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannel do
 
   @impl true
   @spec join(<<_::152>>, any(), any()) :: {:ok, any()}
-  def join("prime_spirals:lobby", payload, socket) do
+  def join("prime_spirals:endpoint", payload, socket) do
     if authorized?(payload) do
       PubSub.subscribe(DistributedPrimeSpirals.PubSub, @topic)
       Logger.info("Client connected")
