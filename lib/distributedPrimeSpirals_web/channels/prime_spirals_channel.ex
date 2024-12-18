@@ -14,6 +14,7 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannel do
     {:ok, socket}
   end
 
+  @impl true
   def handle_in("new_prime", %{"body" => body}, socket) do
     broadcast!(socket, "new_prime", %{body: body})
     {:noreply, socket}
