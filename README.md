@@ -15,28 +15,9 @@ Eventually
 npm audit fix --force
 ```
 
+Furthermore you need **Mix**, a "build tool that provides tasks for creating, compiling, and testing Elixir projects, managing its dependencies, and more.": https://hexdocs.pm/mix/1.12.3/Mix.html
 
-## Alternative: Run it in Docker
-
-In the project root, run:
-``` 
-docker build -t prime-spirals .
-docker-compose up
-```
-This creates a cluster of 2 nodes.
-
-To select the number of nodes you can run:
-```
-docker-compose up --scale additional-node=<n>
-``` 
-`n` is the number of nodes you want to run additionaly to the main node. In total there will be running n+1 nodes.
-
-
-To run a single instance, you can also run:
-``` 
-docker run -p 4000:4000 prime-spirals
-```
-
+The project already contains **OrbitControls**, as it is already imported explicitly in our project structure: https://threejs.org/docs/#examples/en/controls/OrbitControls
 
 ## API
 
