@@ -14,6 +14,8 @@ function initParticleSystem(containerId) {
         return;
     }
 
+    container.innerHTML = "";
+
     // Scene setup
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x000000); // Black background
@@ -116,7 +118,7 @@ function addPoint(x, y) {
     particleGeometry.attributes.position.needsUpdate = true; // Notify THREE.js to update geometry
 
     // Update the number of points displayed
-    document.getElementById('number-of-primes').innerText = `Primes: ${Math.floor(pointsAdded/2)}`;
+    document.getElementById('number-of-primes').innerText = `Primes: ${pointsAdded}`;
 }
 
 // Initialize particle system (for example use)
