@@ -1,5 +1,7 @@
 # DistributedPrimeSpirals
 
+**DistributedPrimeSpirals calculates prime numbers across multiple nodes and visualizes them.**
+
 ## Run it in Docker
 
 In the project root, run:
