@@ -11,7 +11,7 @@ config :distributedPrimeSpirals, DistributedPrimeSpiralsWeb.Endpoint,
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [ip: {0, 0, 0, 0}, port: 4000],
   check_origin: false,
-  code_reloader: true,
+  code_reloader: false,
   debug_errors: true,
   secret_key_base: "wf0KnbHGQjFsrKiVfATzAcmn+nNZTVAM6j8VKysxYh1KscdOjT1MI2Oy7ActmjuS",
   watchers: [

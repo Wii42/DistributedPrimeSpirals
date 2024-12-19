@@ -3,6 +3,9 @@
 # Extend from the official Elixir image.
 FROM elixir:latest
 
+RUN apt-get update && \
+    apt-get install -y inotify-tools
+
 # Create app directory and copy the Elixir projects into it.
 RUN mkdir /app
 COPY . /app

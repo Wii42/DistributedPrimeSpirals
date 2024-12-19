@@ -8,13 +8,11 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannel do
 
   @impl true
   @spec join(<<_::152>>, any(), any()) :: {:ok, any()}
-  def join("prime_spirals:endpoint", payload, socket) do
+  def join("prime_spirals:endpoint", _payload, socket) do
     PubSub.subscribe(DistributedPrimeSpirals.PubSub, @topic)
     Logger.info("Client connected")
     {:ok, socket}
   end
-
-  @impl true
 
   @impl true
   def handle_in("new_prime", %{"body" => body}, socket) do

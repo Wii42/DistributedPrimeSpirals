@@ -58,12 +58,8 @@ defmodule DistributedPrimeSpirals.PrimesDistributor do
   end
 
   defp debug_info() do
-    Logger.debug("This node:")
-    Logger.debug(Node.self() |> inspect())
-    Logger.debug("Connected nodes:")
-    Logger.debug(Node.list() |> inspect())
-    Logger.debug("This cookie:")
-    Logger.debug(Node.get_cookie() |> inspect())
+    Logger.debug("This node: " <> inspect(Node.self()))
+    Logger.debug("Connected nodes: " <> inspect(Node.self()))
   end
 
   def child_spec(opts) do

@@ -83,6 +83,3 @@ defmodule PrimeCalculator do
     IO.puts("#{event}: #{string_msg}")
   end
 end
-
-# for testing via console
-PrimeCalculator.find_primes(1000, &PrimeCalculator.notify_stdout/2)
