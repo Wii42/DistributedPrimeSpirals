@@ -116,7 +116,7 @@ function addPoint(x, y) {
     particleGeometry.attributes.position.needsUpdate = true; // Notify THREE.js to update geometry
 
     // Update the number of points displayed
-    document.getElementById('number-of-primes').innerText = `Primes: ${pointsAdded}`;
+    document.getElementById('number-of-primes').innerText = `Primes: ${Math.floor(pointsAdded/2)}`;
 }
 
 // Initialize particle system (for example use)
