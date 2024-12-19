@@ -29,6 +29,12 @@ defmodule DistributedPrimeSpiralsWeb.Endpoint do
     gzip: false,
     only: DistributedPrimeSpiralsWeb.static_paths()
 
+  plug Plug.Static,
+    at: "/js",
+    from: {:distributedPrimeSpirals, "priv/static/assets"},
+    gzip: false,
+    only: ~w(app.js)
+
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
   if code_reloading? do

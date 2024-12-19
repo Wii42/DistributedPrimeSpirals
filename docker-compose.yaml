@@ -1,0 +1,17 @@
+services:
+  main:
+    image: prime-spirals
+    ports:
+      - "4000:4000" # ensure the application is avalable at localhost:4000 to the host
+    networks:
+      - app_network
+  additional-node:
+    image: prime-spirals
+    ports:
+      - "4000"
+    networks:
+      - app_network
+    
+networks:
+  app_network:
+    driver: bridge

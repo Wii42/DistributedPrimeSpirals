@@ -7,18 +7,22 @@ defmodule DistributedPrimeSpirals.Application do
 
   @impl true
   def start(_type, _args) do
+    # Set the cookie for the node
+    # cookie has to be the same on all todes for them to connect
+    Node.set_cookie(Node.self(), :prime_spirals_cookie)
+
+    topologies = Application.get_env(:libcluster, :topologies) || []
+
     children = [
       DistributedPrimeSpiralsWeb.Telemetry,
-      {DNSCluster, query: Application.get_env(:distributedPrimeSpirals, :dns_cluster_query) || :ignore},
+      {DNSCluster,
+       query: Application.get_env(:distributedPrimeSpirals, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: DistributedPrimeSpirals.PubSub},
-      # Start a worker by calling: DistributedPrimeSpirals.Worker.start_link(arg)
-      # {DistributedPrimeSpirals.Worker, arg},
-      # Start to serve requests, typically the last entry
+      {Cluster.Supervisor, [topologies, [name: DistributedPrimeSpirals.ClusterSupervisor]]},
+      DistributedPrimeSpirals.PrimesDistributor,
       DistributedPrimeSpiralsWeb.Endpoint
     ]
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: DistributedPrimeSpirals.Supervisor]
     Supervisor.start_link(children, opts)
   end

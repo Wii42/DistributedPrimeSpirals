@@ -4,23 +4,14 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannel do
 
   alias Phoenix.PubSub
 
-  @topic "prime_spirals"
+  @topic "prime_spirals_channel"
 
   @impl true
   @spec join(<<_::152>>, any(), any()) :: {:ok, any()}
-  def join("prime_spirals:endpoint", payload, socket) do
-    if authorized?(payload) do
-      PubSub.subscribe(DistributedPrimeSpirals.PubSub, @topic)
-      Logger.info("Client connected")
-      {:ok, socket}
-    else
-      {:error, %{reason: "unauthorized"}}
-    end
-  end
-
-  @impl true
-  def join("prime_spirals:" <> _private_room_id, _params, _socket) do
-    {:error, %{reason: "unauthorized"}}
+  def join("prime_spirals:endpoint", _payload, socket) do
+    PubSub.subscribe(DistributedPrimeSpirals.PubSub, @topic)
+    Logger.info("Client connected")
+    {:ok, socket}
   end
 
   @impl true
@@ -33,16 +24,17 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannel do
   def handle_in("find_primes", %{"n" => n}, socket) do
     Logger.info("Client requests primes up to #{n}")
 
-    PrimeCalculator.find_primes(n, fn event, msg ->
-      PubSub.broadcast(DistributedPrimeSpirals.PubSub, @topic, {event, msg})
-    end)
+    DistributedPrimeSpirals.PrimesDistributor.distribute_primes_calculation(
+      n,
+      &on_primes_calculation_event/2
+    )
 
     {:noreply, socket}
   end
 
-  # Add authorization logic here as required.
-  defp authorized?(_payload) do
-    true
+  # specifies what should be done when PrimeCalculator has an event like a new prime found.
+  defp on_primes_calculation_event(event, message) do
+    PubSub.broadcast(DistributedPrimeSpirals.PubSub, @topic, {event, message})
   end
 
   # Handle-in for new found primes
@@ -63,7 +55,10 @@ defmodule DistributedPrimeSpiralsWeb.PrimeSpiralsChannel do
   end
 
   def handle_info({:checked_ranges, ranges}, socket) do
-    Logger.info("Devided range to be searched into #{length(ranges)} ranges to be computed concurrently")
+    Logger.info(
+      "Devided range to be searched into #{length(ranges)} ranges to be computed concurrently"
+    )
+
     {:noreply, socket}
   end
 end

@@ -9,15 +9,17 @@ import Config
 config :distributedPrimeSpirals, DistributedPrimeSpiralsWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
-  http: [ip: {127, 0, 0, 1}, port: 4000],
+  http: [ip: {0, 0, 0, 0}, port: 4000],
   check_origin: false,
-  code_reloader: true,
+  code_reloader: false,
   debug_errors: true,
   secret_key_base: "wf0KnbHGQjFsrKiVfATzAcmn+nNZTVAM6j8VKysxYh1KscdOjT1MI2Oy7ActmjuS",
   watchers: [
     esbuild:
       {Esbuild, :install_and_run, [:distributedPrimeSpirals, ~w(--sourcemap=inline --watch)]}
   ]
+
+
 
 # ## SSL Support
 #
@@ -70,3 +72,15 @@ config :phoenix_live_view,
   debug_heex_annotations: true,
   # Enable helpful, but potentially expensive runtime checks
   enable_expensive_runtime_checks: true
+
+
+  config :libcluster,
+  topologies: [
+    gossip_example: [
+      strategy: Elixir.Cluster.Strategy.Gossip,
+      config: [
+        port: 45892,
+        if_addr: "0.0.0.0",
+        #multicast_if: "192.168.1.1",
+        multicast_addr: "233.252.1.32",
+        multicast_ttl: 1]]]
