@@ -74,9 +74,10 @@ Now visit [`localhost:4000`](http://localhost:4000) from your browser.
 Endpoint: `prime_spirals:endpoint`
 
 Client requests: 
-  - `find_primes(n)` // find all primes from 0 to and including n
+  - `find_primes(n)` _// find all primes from 0 to and including n_
 
 Server responses: 
-  - `new_prime`, payload 'num' // a new prime was found, the prime number is in the palyoad under the `num` key
-  - `primes_done` // all primes from 0 to n were found and already sent to the client
+  - `new_prime`, payload 'num' _// a new prime was found, the prime number is in the palyoad under the `num` key_
+  - `primes_done` _// all primes from 0 to n were found and already sent to the client_
+  
 
