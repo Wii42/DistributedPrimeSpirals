@@ -2,6 +2,14 @@
 
 **DistributedPrimeSpirals calculates prime numbers across multiple nodes and visualizes them.**
 
+We calculate a large number of prime numbers. The found primes are then visualized by mapping each prime to a point in polar coordinates.
+
+These visualised prime numbers form a huge spiral pattern. This is implemented as follows: 
+Calculation of the prime numbers in the backend using Elixir. The prime numbers found are then transmitted 
+to a Phoenix LiveView channel, which finally transmits all
+newly found points to the outermost display layer, implemented with the JavaScript library Three.js3
+in order to generate the desired large spiral patterns
+
 ![spirals](https://github.com/user-attachments/assets/dca43cc6-faaf-4726-9b64-899d13231bee)
 
 ![closeup](https://github.com/user-attachments/assets/ee7901b2-3a7d-4bd4-ab45-f49b1ff19cc9)
