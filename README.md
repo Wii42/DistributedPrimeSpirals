@@ -39,7 +39,7 @@ docker run -p 4000:4000 prime-spirals
 
 Now visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-## Alternative: Install and run it without Docker
+### Alternative: Install and run it without Docker
 
 You will need phoenix_html, three and three.js, install it with
 
