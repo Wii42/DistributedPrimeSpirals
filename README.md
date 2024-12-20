@@ -2,6 +2,11 @@
 
 **DistributedPrimeSpirals calculates prime numbers across multiple nodes and visualizes them.**
 
+![spirals](https://github.com/user-attachments/assets/dca43cc6-faaf-4726-9b64-899d13231bee)
+
+![closeup](https://github.com/user-attachments/assets/ee7901b2-3a7d-4bd4-ab45-f49b1ff19cc9)
+
+
 ## Run it in Docker
 
 In the project root, run:
