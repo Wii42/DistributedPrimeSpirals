@@ -65,8 +65,6 @@ Start Phoenix endpoint with `elixir --sname prime-spirals-node -S mix phx.server
 Now visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 
-
-
 ## API
 
 *The API specification used between frontend and backend via Phoenix Channels*
@@ -80,4 +78,11 @@ Server responses:
   - `new_prime`, payload 'num' _// a new prime was found, the prime number is in the palyoad under the `num` key_
   - `primes_done` _// all primes from 0 to n were found and already sent to the client_
   
+## Live demo
 
+https://github.com/user-attachments/assets/682bae83-6621-486b-970e-b16b8afd98a9
+
+
+
+
+## 
