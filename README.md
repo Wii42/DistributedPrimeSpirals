@@ -6,9 +6,9 @@ We calculate a large number of prime numbers. The found primes are then visualiz
 Idea taken from [3Blue1Brown](https://www.3blue1brown.com/lessons/prime-spirals).
 
 These visualised prime numbers form a huge spiral pattern. This is implemented as follows: 
-Calculation of the prime numbers in the backend using Elixir. The prime numbers found are then transmitted 
-to a Phoenix LiveView channel, which finally transmits all
-newly found points to the outermost display layer, implemented with the JavaScript library Three.js3
+Calculation of the prime numbers in the backend using [Elixir](https://github.com/elixir-lang). The prime numbers found are then transmitted 
+to a [Phoenix LiveView](https://www.phoenixframework.org) channel, which finally transmits all
+newly found points to the outermost display layer, implemented with the JavaScript library [Three.js](https://threejs.org)
 in order to generate the desired large spiral patterns
 
 ![spirals](https://github.com/user-attachments/assets/dca43cc6-faaf-4726-9b64-899d13231bee)
