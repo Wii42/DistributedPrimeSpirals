@@ -65,6 +65,10 @@ Start Phoenix endpoint with `elixir --sname prime-spirals-node -S mix phx.server
 Now visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 
+## System Architecture
+![image](https://github.com/user-attachments/assets/e76621d8-1f9d-40e8-88c2-7ac787453b63)
+Detailed View of the System’s Functional Interaction
+
 ## API
 
 *The API specification used between frontend and backend via Phoenix Channels*
