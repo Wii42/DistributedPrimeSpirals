@@ -23,6 +23,8 @@ In the project root, run:
 docker build -t prime-spirals .
 docker-compose up
 ```
+
+### Set specific number of nodes
 This creates a cluster of 2 nodes.
 
 To select the number of nodes you can run:
@@ -41,7 +43,7 @@ Now visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 ### Alternative: Install and run it without Docker
 
-You will need phoenix_html, three and three.js, install it with
+You will need packages **phoenix_html**, **three** and **three.js**, install it with
 
 ```
 npm install phoenix_html
@@ -86,8 +88,5 @@ Server responses:
 ## Live demo
 
 https://github.com/user-attachments/assets/682bae83-6621-486b-970e-b16b8afd98a9
-
-
-
 
 ## 
